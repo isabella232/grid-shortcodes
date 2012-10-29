@@ -7,7 +7,7 @@ Description: Adds a collection of shortcodes for easy implementation of the resp
 Version: 1.0
 Author: Evan Mattson
 Author URI: http://evanmattson.pagelines.me
-Pagelines: true
+PageLines: true
 */
 
 class GridShortcodes {
