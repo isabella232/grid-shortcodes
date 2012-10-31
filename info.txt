@@ -13,22 +13,22 @@ Then add in your &lt;spanX&gt; tags, where X is the number of columns (out of 12
 
 To create two cells that are half of the row, use 2 span6 shortcodes, like so:
 
-<code>
+<pre>
 [span6]some content in the first cell.[/span6]
 [span6]some content in the second cell.[/span6]
-</code>
+</pre>
 
 Then close the row:
 <code>[/row]</code>
 
-<p class="zmt zmb"><small><span class="label label-info">Note:</span> Grids can go anywhere -- in your header, footer, sidebars, or even inside other grids!</small></p>
+<p class="zmt"><small><span class="label label-info">Note:</span> Grids can go anywhere -- in your header, footer, sidebars, or even inside other grids!</small></p>
 
 
 <h3>Reference</h3>
 
 Here is a list of spanX shortcode tags with their corresponding widths and even number of columns where applicable:
 
-<code>
+<pre>
 [span1]  = 1/12   ~8% - 12 columns
 [span2]  = 1/6   ~17% - 6 columns
 [span3]  = 1/4    25% - 4 columns
@@ -41,9 +41,9 @@ Here is a list of spanX shortcode tags with their corresponding widths and even 
 [span10] = 5/6   ~83%
 [span11] = 11/12 ~92%
 [span12] = 1/1   100% - 1 column
-</code>
+</pre>
 
-<p class="zmt zmb"><small><span class="label label-info">Note:</span> All grid shortcodes accept <pre><strong>id</strong></pre> and <pre><strong>class</strong></pre> attributes for additional customisation.</small></p>
+<p class="zmt zmb"><small><span class="label label-info">Note:</span> All grid shortcodes accept <code><strong>id</strong></code> and <code><strong>class</strong></code> attributes for additional customisation.</small></p>
 
 == Changelog ==
 
