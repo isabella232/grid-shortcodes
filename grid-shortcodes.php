@@ -4,7 +4,7 @@ Plugin Name: Grid Shortcodes
 Plugin URI: http://evanmattson.pagelines.me/plugins/grid-shortcodes
 Demo: http://evanmattson.pagelines.me/plugins/grid-shortcodes
 Description: Adds a collection of shortcodes for easy implementation of the responsive Bootstrap Grid!
-Version: 1.0
+Version: 1.1
 Author: Evan Mattson
 Author URI: http://evanmattson.pagelines.me
 PageLines: true
@@ -35,13 +35,12 @@ class GridShortcodes {
 		self::add_shortcodes();
 
 		// do
-		$content = do_shortcode($content);
+		$content = do_shortcode( $content );
 
 		// restore
 		$shortcode_tags = $_shortcode_tags;
 
 		return $content;
-
 	}
 
 	private function add_shortcodes() {
@@ -68,25 +67,56 @@ class GridShortcodes {
 	}
 
 	/**
-	 * Callback for all grid shortcodes
-	 * @param  array 	$atts
-	 * @param  string 	$content
-	 * @param  string 	$tag
-	 * @return string 	markup
+	 * Master callback for all grid shortcodes
 	 */
 	function grid_shortcodes( $atts, $content, $tag ) {
 
 		extract( shortcode_atts(self::default_atts(), $atts) );
 
-		$content = trim($content);
+		$content = trim( $content );
+
+		if ( 'row' != $tag )
+			$content = self::maybe_wrap_content( $atts, $content, $tag );
 
 		return sprintf('<div%s class="%s%s">%s</div>',
 			$id ? " id=\"$id\"" : '',
 			$tag,
 			$class ? " $class" : '',
-			do_shortcode($content)
-			);
+			do_shortcode( $content )
+		);
 
+	}
+
+	function maybe_wrap_content( $atts, $content, $tag ) {
+
+		if ( self::to_wrap_or_not_to_wrap( $atts ) ) {
+
+			// if the pad class is set use it, otherwise give it a default
+			// pad="" will give the wrapping div an empty class
+			return sprintf('<div class="%s">%s</div>',
+				isset( $atts['pad'] ) ? esc_attr( $atts['pad'] ) : "span-pad {$tag}-pad",
+				$content
+			);
+		}
+		else
+			return $content;
+	}
+
+	function to_wrap_or_not_to_wrap( $atts ) {
+
+		if ( ! is_array($atts) )
+			return false;
+
+		if ( isset( $atts['pad'] ) )
+			return true;
+
+		// check to see if it was used without a value
+		foreach ( $atts as $key => $value ) {
+			if ( is_int( $key ) && 'pad' == $value )
+				return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -97,9 +127,8 @@ class GridShortcodes {
 
 		return array(
 			'id'    => '',
-			'class' => ''
-			);
-
+			'class' => '',
+		);
 	}
 
 
