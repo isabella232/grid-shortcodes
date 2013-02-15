@@ -123,6 +123,9 @@ Here is a list of spanX shortcode tags with their corresponding widths and even 
 
 == Changelog ==
 
+= 1.2 =
+* Added better support for nested grids.
+
 = 1.1 =
 * Added the <code>pad</code> attribute for wrapping inner content.
 
