@@ -4,17 +4,18 @@ Plugin Name: Grid Shortcodes
 Plugin URI: http://evanmattson.pagelines.me/plugins/grid-shortcodes
 Demo: http://evanmattson.pagelines.me/plugins/grid-shortcodes
 Description: Adds a collection of shortcodes for easy implementation of the responsive Bootstrap Grid!
-Version: 1.2
+Version: 1.2.1
 Author: Evan Mattson
 Author URI: http://evanmattson.pagelines.me
 PageLines: true
+V3: true
 */
 
 class GridShortcodes {
 
 	function __construct() {
 
-		self::add_shortcodes();
+		$this->add_shortcodes();
 
 		add_filter( 'the_content', array(&$this, 'do_grid_shortcodes'), 7 );
 	}
@@ -31,7 +32,7 @@ class GridShortcodes {
 		remove_all_shortcodes();
 
 		// add
-		self::add_shortcodes();
+		$this->add_shortcodes();
 
 		// do
 		$content = do_shortcode( $content );
@@ -63,7 +64,7 @@ class GridShortcodes {
 		// now we're going to add a LOT of shortcodes (13*(26+1))... 351
 		foreach ( $tags as $tag ) {
 			add_shortcode( $tag, array(&$this, 'grid_shortcodes') );
-			foreach ( self::get_alphabet_array() as $x )
+			foreach ( $this->get_alphabet_array() as $x )
 				add_shortcode( "{$tag}_$x", array(&$this, 'grid_shortcodes') );
 		}
 	}
@@ -73,15 +74,15 @@ class GridShortcodes {
 	 */
 	function grid_shortcodes( $atts, $content, $tag ) {
 
-		extract( shortcode_atts(self::default_atts(), $atts) );
+		extract( shortcode_atts($this->default_atts(), $atts) );
 
-		$grid_class = self::get_grid_class( $tag );
+		$grid_class = $this->get_grid_class( $tag );
 
 		$content = trim( $content );
 
 		// grid css targets spanX with > selector
 		if ( 'row' != $grid_class )
-			$content = self::maybe_wrap_content( $atts, $content, $tag );
+			$content = $this->maybe_wrap_content( $atts, $content, $tag );
 
 		return sprintf('<div %s class="%s%s">%s</div>',
 			$id ? "id='$id'" : '',
@@ -102,14 +103,14 @@ class GridShortcodes {
 
 	function maybe_wrap_content( $atts, $content, $tag ) {
 
-		if ( self::to_wrap_or_not_to_wrap( $atts ) ) {
+		if ( $this->to_wrap_or_not_to_wrap( $atts ) ) {
 
 			// if the pad class is set use it, otherwise give it a default
 			// pad="" will give the wrapping div an empty class
 			return sprintf('<div class="%s">%s</div>',
 				isset( $atts['pad'] ) 
 					? esc_attr( $atts['pad'] )
-					: sprintf('span-pad %s-pad', self::get_grid_class( $tag ) ),
+					: sprintf('span-pad %s-pad', $this->get_grid_class( $tag ) ),
 				$content
 			);
 		}
@@ -149,6 +150,6 @@ class GridShortcodes {
 		$alpha = 'a-b-c-d-e-f-g-h-i-j-k-l-m-n-o-p-q-r-s-t-u-v-w-x-y-z';
 		return explode('-', $alpha);
 	}
-} // END OF CLASS
+} // GridShortcodes
 
 new GridShortcodes;
