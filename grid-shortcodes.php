@@ -1,14 +1,14 @@
 <?php
 /*
-Plugin Name: Grid Shortcodes
-Plugin URI: http://evanmattson.pagelines.me/plugins/grid-shortcodes
-Demo: http://evanmattson.pagelines.me/plugins/grid-shortcodes
-Description: Adds a collection of shortcodes for easy implementation of the responsive Bootstrap Grid!
-Version: 1.2.1
-Author: Evan Mattson
-Author URI: http://evanmattson.pagelines.me
-PageLines: true
-V3: true
+	Plugin Name: Grid Shortcodes
+	Version: 1.2.2
+	Description: Adds a collection of shortcodes for easy implementation of the responsive Bootstrap Grid!
+	Author: Evan Mattson
+	Author URI: http://pagelines.evanmattson.com
+	Plugin URI: http://pagelines.evanmattson.com/plugins/grid-shortcodes
+	Demo: http://pagelines.evanmattson.com/plugins/grid-shortcodes/demo
+	PageLines: true
+	V3: true
 */
 
 class GridShortcodes {
@@ -102,6 +102,9 @@ class GridShortcodes {
 	}
 
 	function maybe_wrap_content( $atts, $content, $tag ) {
+
+		// prepending here so it is inside the pad if it will be wrapped
+		$content = '<p style="display:none;"></p>'.$content; // wpautop fix
 
 		if ( $this->to_wrap_or_not_to_wrap( $atts ) ) {
 

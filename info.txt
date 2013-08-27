@@ -123,6 +123,9 @@ Here is a list of spanX shortcode tags with their corresponding widths and even 
 
 == Changelog ==
 
+= 1.2.2 =
+* WP autop fix
+
 = 1.2.1 =
 * DMS Ready
 
