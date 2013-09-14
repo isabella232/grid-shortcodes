@@ -1,28 +1,45 @@
 <?php
 /*
 	Plugin Name: Grid Shortcodes
-	Version: 1.2.2
+	Version: 1.2.3
 	Description: Adds a collection of shortcodes for easy implementation of the responsive Bootstrap Grid!
 	Author: Evan Mattson
-	Author URI: http://pagelines.evanmattson.com
-	Plugin URI: http://pagelines.evanmattson.com/plugins/grid-shortcodes
-	Demo: http://pagelines.evanmattson.com/plugins/grid-shortcodes/demo
+	Author URI: http://pagelines.aaemnnost.tv
+	Plugin URI: http://pagelines.aaemnnost.tv/plugins/grid-shortcodes
+	Demo: http://pagelines.aaemnnost.tv/plugins/grid-shortcodes/demo
 	PageLines: true
 	V3: true
 */
 
-class GridShortcodes {
+class GridShortcodes
+{
+	/**
+	 * HTML for inserting at the beginning of each spanX
+	 * as a fix for wpautop not properly wrapping the first paragraph
+	 * @var string
+	 */
+	static $autopfix = '<p style="display:none;"><!-- autopfix --></p>';
 
-	function __construct() {
+	static $default_atts = array(
+		'id'    => '',
+		'class' => '',
+	);
 
+	function __construct()
+	{
 		$this->add_shortcodes();
 
 		add_filter( 'the_content', array(&$this, 'do_grid_shortcodes'), 7 );
+		add_filter( 'the_content', array(&$this, 'cleanup'), 999 );
 	}
 
-
-	function do_grid_shortcodes( $content ) {
-
+	/**
+	 * Process all grid shortcodes
+	 * 'the_content' filter callback
+	 * Only renders grid markup.
+	 */
+	function do_grid_shortcodes( $content )
+	{
 		global $shortcode_tags;
 
 		// backup
@@ -43,8 +60,16 @@ class GridShortcodes {
 		return $content;
 	}
 
-	private function add_shortcodes() {
+	/**
+	 * Remove our autopfix html from output as it is no longer needed
+	 */
+	function cleanup( $content )
+	{
+		return str_replace( self::$autopfix, '', $content );
+	}
 
+	private function add_shortcodes()
+	{
 		$tags = array(
 			'row',
 			'span1',
@@ -72,9 +97,10 @@ class GridShortcodes {
 	/**
 	 * Master callback for all grid shortcodes
 	 */
-	function grid_shortcodes( $atts, $content, $tag ) {
-
-		extract( shortcode_atts($this->default_atts(), $atts) );
+	function grid_shortcodes( $atts, $content, $tag )
+	{
+		$atts = array_map('esc_attr', $atts);
+		extract( shortcode_atts( self::$default_atts, $atts) );
 
 		$grid_class = $this->get_grid_class( $tag );
 
@@ -84,16 +110,24 @@ class GridShortcodes {
 		if ( 'row' != $grid_class )
 			$content = $this->maybe_wrap_content( $atts, $content, $tag );
 
-		return sprintf('<div %s class="%s%s">%s</div>',
-			$id ? "id='$id'" : '',
-			$grid_class,
-			$class ? " $class" : '',
-			do_shortcode( $content )
-		);
+		$classes = $class ? "$grid_class $class" : $grid_class;
+		$inner = do_shortcode( $content );
+
+		// build grid
+		$grid = "<div class=\"$classes\"";
+
+		if ( $id )
+			$grid .= " id=\"$id\"";
+
+		$grid .= ">$inner</div>";
+
+		return $grid;
 	}
 
-	function get_grid_class( $tag ) {
-		if ( false !== strpos($tag, '_') ) {
+	function get_grid_class( $tag )
+	{
+		if ( false !== strpos($tag, '_') )
+		{
 			$_tag = explode('_', $tag);
 			return $_tag[0];
 		}
@@ -101,10 +135,10 @@ class GridShortcodes {
 			return $tag;
 	}
 
-	function maybe_wrap_content( $atts, $content, $tag ) {
-
+	function maybe_wrap_content( $atts, $content, $tag )
+	{
 		// prepending here so it is inside the pad if it will be wrapped
-		$content = '<p style="display:none;"></p>'.$content; // wpautop fix
+		$content = self::$autopfix . $content; // wpautop fix
 
 		if ( $this->to_wrap_or_not_to_wrap( $atts ) ) {
 
@@ -121,8 +155,8 @@ class GridShortcodes {
 			return $content;
 	}
 
-	function to_wrap_or_not_to_wrap( $atts ) {
-
+	function to_wrap_or_not_to_wrap( $atts )
+	{
 		if ( ! is_array($atts) )
 			return false;
 
@@ -137,22 +171,12 @@ class GridShortcodes {
 		return false;
 	}
 
-	/**
-	 * Returns array of default attributes for grid shortcodes
-	 * @return array defaults
-	 */
-	function default_atts() {
-
-		return array(
-			'id'    => '',
-			'class' => '',
-		);
-	}
-
-	function get_alphabet_array() {
+	function get_alphabet_array()
+	{
 		$alpha = 'a-b-c-d-e-f-g-h-i-j-k-l-m-n-o-p-q-r-s-t-u-v-w-x-y-z';
 		return explode('-', $alpha);
 	}
+
 } // GridShortcodes
 
 new GridShortcodes;
