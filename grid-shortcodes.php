@@ -1,7 +1,7 @@
 <?php
 /*
 	Plugin Name: Grid Shortcodes
-	Version: 1.2.3
+	Version: 1.2.4
 	Description: Adds a collection of shortcodes for easy implementation of the responsive Bootstrap Grid!
 	Author: Evan Mattson
 	Author URI: http://pagelines.aaemnnost.tv
@@ -99,11 +99,10 @@ class GridShortcodes
 	 */
 	function grid_shortcodes( $atts, $content, $tag )
 	{
-		$atts = array_map('esc_attr', $atts);
+		$atts = is_array( $atts ) ? array_map('esc_attr', $atts) : $atts;
 		extract( shortcode_atts( self::$default_atts, $atts) );
 
 		$grid_class = $this->get_grid_class( $tag );
-
 		$content = trim( $content );
 
 		// grid css targets spanX with > selector
@@ -146,7 +145,7 @@ class GridShortcodes
 			// pad="" will give the wrapping div an empty class
 			return sprintf('<div class="%s">%s</div>',
 				isset( $atts['pad'] ) 
-					? esc_attr( $atts['pad'] )
+					? $atts['pad']
 					: sprintf('span-pad %s-pad', $this->get_grid_class( $tag ) ),
 				$content
 			);
