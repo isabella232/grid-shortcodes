@@ -1,0 +1,9 @@
+{
+  "name": "aaemnnosttv/grid-shortcodes",
+  "type": "wordpress-plugin",
+  "description": "A PageLines plugin for adding a collection of shortcodes for easy implementation of the responsive Bootstrap Grid!",
+  "keywords": ["plugin","wordpress","pagelines","shortcodes","responsive","grid"],
+  "require": {
+    "composer/installers": "~1.0.6"
+  }
+}
